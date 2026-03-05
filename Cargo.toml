@@ -57,6 +57,9 @@ anyhow = "1.0"
 # UUID generation
 uuid = { version = "1.12", features = ["v4", "serde"] }
 
+# CLI
+clap = { version = "4.5", features = ["derive"] }
+
 # Configuration
 config = "0.14"
 
