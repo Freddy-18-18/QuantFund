@@ -9,7 +9,8 @@ use quantfund_core::{
     Event, FillEvent, InstrumentId, Order, OrderId, OrderStatus, Price, StrategyId, Volume,
 };
 use quantfund_data::TickReplay;
-use quantfund_execution::{MatchingEngine, OrderManagementSystem};
+use quantfund_execution::OrderManagementSystem;
+use quantfund_mt5::{ExecutionBridge, SimulationBridge};
 use quantfund_risk::{PortfolioState, RiskEngine};
 use quantfund_strategy::{MarketSnapshot, Strategy};
 
@@ -20,20 +21,28 @@ use crate::result::BacktestResult;
 
 /// The deterministic backtest runner.
 /// Processes ticks sequentially, maintaining strict event ordering.
+///
+/// The execution backend is a `Box<dyn ExecutionBridge>`, so the runner works
+/// identically whether backed by `SimulationBridge` (backtest / paper) or
+/// `Mt5Bridge` (live).
 pub struct BacktestRunner {
     config: BacktestConfig,
     strategies: Vec<Box<dyn Strategy>>,
     risk_engine: RiskEngine,
-    matching_engine: MatchingEngine,
+    /// Swappable execution backend.
+    execution: Box<dyn ExecutionBridge>,
     oms: OrderManagementSystem,
     portfolio: Portfolio,
 }
 
 impl BacktestRunner {
-    /// Initialise all subsystems from the provided config.
+    /// Initialise with the default `SimulationBridge` (MatchingEngine).
     pub fn new(config: BacktestConfig, strategies: Vec<Box<dyn Strategy>>) -> Self {
+        use quantfund_execution::MatchingEngine;
+
         let risk_engine = RiskEngine::new(config.risk_config.clone());
         let matching_engine = MatchingEngine::new(config.execution_config.clone(), config.seed);
+        let execution = Box::new(SimulationBridge::new(matching_engine));
         let oms = OrderManagementSystem::new();
         let portfolio = Portfolio::new(config.initial_balance);
 
@@ -41,7 +50,27 @@ impl BacktestRunner {
             config,
             strategies,
             risk_engine,
-            matching_engine,
+            execution,
+            oms,
+            portfolio,
+        }
+    }
+
+    /// Initialise with a custom `ExecutionBridge` (e.g., `Mt5Bridge` for live trading).
+    pub fn with_bridge(
+        config: BacktestConfig,
+        strategies: Vec<Box<dyn Strategy>>,
+        execution: Box<dyn ExecutionBridge>,
+    ) -> Self {
+        let risk_engine = RiskEngine::new(config.risk_config.clone());
+        let oms = OrderManagementSystem::new();
+        let portfolio = Portfolio::new(config.initial_balance);
+
+        Self {
+            config,
+            strategies,
+            risk_engine,
+            execution,
             oms,
             portfolio,
         }
@@ -76,8 +105,8 @@ impl BacktestRunner {
             // Clone the tick so we own it for the remainder of this iteration.
             let tick = tick.clone();
 
-            // ── Step A: Process tick through matching engine -> collect fills ─
-            let events = self.matching_engine.process_tick(&tick);
+            // ── Step A: Process tick through execution bridge -> collect fills ─
+            let events = self.execution.process_tick(&tick);
 
             for event in &events {
                 match event {
@@ -89,15 +118,13 @@ impl BacktestRunner {
                             &fill.order_id,
                             OrderStatus::Filled,
                             fill.timestamp,
-                            "filled by matching engine",
+                            "filled by execution bridge",
                         );
 
                         // Feed execution data to risk engine for anomaly tracking.
-                        // In backtest, latency is deterministic (0µs).
                         self.risk_engine.record_execution(0, fill.slippage);
                     }
                     Event::PartialFill(pf) => {
-                        // Record partial fill in OMS as PartiallyFilled.
                         self.oms.update_status(
                             &pf.order_id,
                             OrderStatus::PartiallyFilled,
@@ -205,9 +232,11 @@ impl BacktestRunner {
                         // Store metadata for fill attribution.
                         order_metadata.insert(order_id, (signal.strategy_id.clone(), sl, tp));
 
-                        // Register in OMS and submit to matching engine.
+                        // Register in OMS and submit to execution bridge.
                         self.oms.register_order(order.clone());
-                        self.matching_engine.submit_order(order, tick.timestamp);
+                        if let Err(e) = self.execution.submit_order(order, tick.timestamp) {
+                            debug!(order_id = %order_id, error = %e, "execution bridge rejected order");
+                        }
                     }
                     Err(violations) => {
                         debug!(

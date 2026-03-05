@@ -166,6 +166,12 @@ impl OrderId {
         Self(Uuid::new_v4())
     }
 
+    /// Construct an `OrderId` from an existing [`Uuid`].
+    /// Used by the MT5 bridge to reconstruct IDs received over the wire.
+    pub fn from_uuid(uuid: Uuid) -> Self {
+        Self(uuid)
+    }
+
     pub fn as_uuid(&self) -> &Uuid {
         &self.0
     }

@@ -10,6 +10,7 @@ quantfund-data = { workspace = true }
 quantfund-strategy = { workspace = true }
 quantfund-risk = { workspace = true }
 quantfund-execution = { workspace = true }
+quantfund-mt5 = { workspace = true }
 chrono = { workspace = true }
 rust_decimal = { workspace = true }
 rust_decimal_macros = { workspace = true }

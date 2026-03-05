@@ -7,6 +7,7 @@ members = [
     "engine/strategy",
     "engine/risk",
     "engine/execution",
+    "engine/mt5",
     "engine/backtest",
     "engine/bin",
 ]
@@ -25,6 +26,7 @@ quantfund-data = { path = "engine/data" }
 quantfund-strategy = { path = "engine/strategy" }
 quantfund-risk = { path = "engine/risk" }
 quantfund-execution = { path = "engine/execution" }
+quantfund-mt5 = { path = "engine/mt5" }
 quantfund-backtest = { path = "engine/backtest" }
 
 # Async runtime

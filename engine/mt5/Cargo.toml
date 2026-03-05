@@ -1,0 +1,23 @@
+[package]
+name = "quantfund-mt5"
+description = "MT5 bridge — bidirectional IPC between the Rust engine and MetaTrader 5"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+quantfund-core = { workspace = true }
+quantfund-execution = { workspace = true }
+
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+chrono = { workspace = true }
+rust_decimal = { workspace = true }
+uuid = { workspace = true }
+tokio = { workspace = true }
+
+[dev-dependencies]
+rust_decimal_macros = { workspace = true }
+tokio = { workspace = true }
