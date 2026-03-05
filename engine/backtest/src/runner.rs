@@ -90,16 +90,23 @@ impl BacktestRunner {
                         fill.timestamp,
                         "filled by matching engine",
                     );
+
+                    // Feed execution data to risk engine for anomaly tracking.
+                    // In backtest, latency is deterministic (0µs).
+                    self.risk_engine.record_execution(0, fill.slippage);
                 }
             }
 
-            // ── Step B: Update portfolio equity with current prices ───────────
+            // ── Step B: Feed tick to risk analytics (volatility, correlation) ─
+            self.risk_engine.update_tick(&tick);
+
+            // ── Step C: Update portfolio equity with current prices ───────────
             let mut current_prices: HashMap<InstrumentId, (Price, Price)> = HashMap::new();
             current_prices.insert(tick.instrument_id.clone(), (tick.bid, tick.ask));
             self.portfolio
                 .update_equity(tick.timestamp, &current_prices);
 
-            // ── Step C: Update risk engine with portfolio state ────────────────
+            // ── Step D: Update risk engine with portfolio state ────────────────
             let open_positions: Vec<quantfund_core::Position> =
                 self.portfolio.open_positions().values().cloned().collect();
 
@@ -112,7 +119,7 @@ impl BacktestRunner {
                 margin_used: dec!(0),
             });
 
-            // ── Step D: For each strategy, call on_tick and collect signals ────
+            // ── Step E: For each strategy, call on_tick and collect signals ────
             let snapshot = MarketSnapshot {
                 tick: &tick,
                 instrument_id: &tick.instrument_id,
@@ -127,7 +134,7 @@ impl BacktestRunner {
                     }
             }
 
-            // ── Step E: For each signal, create Order and validate via risk ───
+            // ── Step F: For each signal, create Order and validate via risk ───
             for signal in signals {
                 let Some(side) = signal.side else {
                     continue; // No directional bias -> skip.
@@ -160,7 +167,7 @@ impl BacktestRunner {
                     .and_then(|v| v.as_f64())
                     .map(Price::from);
 
-                // ── Step F: Risk validation ──────────────────────────────────
+                // ── Step G: Risk validation ──────────────────────────────────
                 match self.risk_engine.validate_order(&order, &tick) {
                     Ok(()) => {
                         debug!(
