@@ -1,0 +1,19 @@
+[package]
+name = "quantfund-backtest"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+quantfund-core = { workspace = true }
+quantfund-events = { workspace = true }
+quantfund-data = { workspace = true }
+quantfund-strategy = { workspace = true }
+quantfund-risk = { workspace = true }
+quantfund-execution = { workspace = true }
+chrono = { workspace = true }
+rust_decimal = { workspace = true }
+rust_decimal_macros = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tracing = { workspace = true }
+thiserror = { workspace = true }

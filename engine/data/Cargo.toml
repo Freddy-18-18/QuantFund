@@ -1,0 +1,17 @@
+[package]
+name = "quantfund-data"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+quantfund-core = { workspace = true }
+quantfund-events = { workspace = true }
+arrow = { workspace = true }
+parquet = { workspace = true }
+chrono = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+
+[dev-dependencies]
+rust_decimal = { workspace = true }
+rust_decimal_macros = { workspace = true }

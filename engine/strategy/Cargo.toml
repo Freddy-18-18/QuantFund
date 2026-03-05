@@ -1,0 +1,12 @@
+[package]
+name = "quantfund-strategy"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+quantfund-core = { workspace = true }
+quantfund-events = { workspace = true }
+rust_decimal = { workspace = true }
+rust_decimal_macros = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }

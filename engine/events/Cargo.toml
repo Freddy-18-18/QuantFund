@@ -1,0 +1,14 @@
+[package]
+name = "quantfund-events"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+quantfund-core = { workspace = true }
+crossbeam = { workspace = true }
+crossbeam-channel = { workspace = true }
+tracing = { workspace = true }
+thiserror = { workspace = true }
+
+[dev-dependencies]
+rust_decimal = { workspace = true }

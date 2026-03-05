@@ -1,0 +1,17 @@
+[package]
+name = "quantfund-execution"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+quantfund-core = { workspace = true }
+quantfund-events = { workspace = true }
+quantfund-risk = { workspace = true }
+rust_decimal = { workspace = true }
+serde = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+uuid = { workspace = true }
+
+[dev-dependencies]
+rust_decimal_macros = { workspace = true }

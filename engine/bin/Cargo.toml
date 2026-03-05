@@ -1,0 +1,20 @@
+[package]
+name = "quantfund-engine"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+quantfund-core = { workspace = true }
+quantfund-events = { workspace = true }
+quantfund-data = { workspace = true }
+quantfund-strategy = { workspace = true }
+quantfund-risk = { workspace = true }
+quantfund-execution = { workspace = true }
+quantfund-backtest = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+config = { workspace = true }
+serde = { workspace = true }
+toml = { workspace = true }
+anyhow = { workspace = true }

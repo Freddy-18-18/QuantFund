@@ -1,0 +1,72 @@
+[workspace]
+resolver = "2"
+members = [
+    "engine/core",
+    "engine/events",
+    "engine/data",
+    "engine/strategy",
+    "engine/risk",
+    "engine/execution",
+    "engine/backtest",
+    "engine/bin",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "UNLICENSED"
+repository = "https://github.com/QuantFund/engine"
+
+[workspace.dependencies]
+# Internal crates
+quantfund-core = { path = "engine/core" }
+quantfund-events = { path = "engine/events" }
+quantfund-data = { path = "engine/data" }
+quantfund-strategy = { path = "engine/strategy" }
+quantfund-risk = { path = "engine/risk" }
+quantfund-execution = { path = "engine/execution" }
+quantfund-backtest = { path = "engine/backtest" }
+
+# Async runtime
+tokio = { version = "1.43", features = ["full"] }
+
+# Concurrency
+crossbeam = "0.8"
+crossbeam-channel = "0.5"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "0.8"
+
+# Decimal arithmetic (exact pricing)
+rust_decimal = { version = "1.37", features = ["serde-with-str"] }
+rust_decimal_macros = "1.37"
+
+# Time handling
+chrono = { version = "0.4", features = ["serde"] }
+
+# Logging / tracing
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["json", "env-filter"] }
+
+# Error handling
+thiserror = "2.0"
+anyhow = "1.0"
+
+# UUID generation
+uuid = { version = "1.12", features = ["v4", "serde"] }
+
+# Configuration
+config = "0.14"
+
+# Data formats
+arrow = { version = "54", features = ["prettyprint"] }
+parquet = "54"
+
+# Metrics
+metrics = "0.24"
+metrics-exporter-prometheus = "0.16"
+
+# Testing
+criterion = { version = "0.5", features = ["html_reports"] }
