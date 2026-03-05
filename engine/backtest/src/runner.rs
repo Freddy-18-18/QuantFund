@@ -80,20 +80,42 @@ impl BacktestRunner {
             let events = self.matching_engine.process_tick(&tick);
 
             for event in &events {
-                if let Event::Fill(fill) = event {
-                    self.handle_fill(fill, &mut instrument_positions, &order_metadata);
+                match event {
+                    Event::Fill(fill) => {
+                        self.handle_fill(fill, &mut instrument_positions, &order_metadata);
 
-                    // Update OMS status to Filled.
-                    self.oms.update_status(
-                        &fill.order_id,
-                        OrderStatus::Filled,
-                        fill.timestamp,
-                        "filled by matching engine",
-                    );
+                        // Update OMS status to Filled.
+                        self.oms.update_status(
+                            &fill.order_id,
+                            OrderStatus::Filled,
+                            fill.timestamp,
+                            "filled by matching engine",
+                        );
 
-                    // Feed execution data to risk engine for anomaly tracking.
-                    // In backtest, latency is deterministic (0µs).
-                    self.risk_engine.record_execution(0, fill.slippage);
+                        // Feed execution data to risk engine for anomaly tracking.
+                        // In backtest, latency is deterministic (0µs).
+                        self.risk_engine.record_execution(0, fill.slippage);
+                    }
+                    Event::PartialFill(pf) => {
+                        // Record partial fill in OMS as PartiallyFilled.
+                        self.oms.update_status(
+                            &pf.order_id,
+                            OrderStatus::PartiallyFilled,
+                            pf.timestamp,
+                            &format!(
+                                "partial fill: {} filled, {} remaining",
+                                pf.filled_volume, pf.remaining_volume
+                            ),
+                        );
+
+                        debug!(
+                            order_id = %pf.order_id,
+                            filled = %pf.filled_volume,
+                            remaining = %pf.remaining_volume,
+                            "partial fill received"
+                        );
+                    }
+                    _ => {}
                 }
             }
 
@@ -185,7 +207,7 @@ impl BacktestRunner {
 
                         // Register in OMS and submit to matching engine.
                         self.oms.register_order(order.clone());
-                        self.matching_engine.submit_order(order);
+                        self.matching_engine.submit_order(order, tick.timestamp);
                     }
                     Err(violations) => {
                         debug!(
