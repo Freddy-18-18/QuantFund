@@ -1,0 +1,52 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["quantfund"]
+
+[project]
+name = "quantfund-research"
+version = "0.1.0"
+description = "QuantFund Research Layer - Alpha Discovery & Portfolio Allocation"
+requires-python = ">=3.11"
+dependencies = [
+    "pandas>=2.1",
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "scikit-learn>=1.3",
+    "polars>=0.19",
+    "pyarrow>=14.0",
+    "hmmlearn>=0.3",
+    "statsmodels>=0.14",
+    "numba>=0.58",
+    "joblib>=1.3",
+    "pydantic>=2.4",
+    "rich>=13.0",
+    "loguru>=0.7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "ruff>=0.1",
+    "mypy>=1.6",
+]
+brokers = [
+    "MetaTrader5>=5.0",
+    "yfinance>=0.2",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.mypy]
+python_version = "3.11"
+strict = false
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"

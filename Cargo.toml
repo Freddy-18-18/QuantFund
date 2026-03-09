@@ -10,6 +10,7 @@ members = [
     "engine/mt5",
     "engine/backtest",
     "engine/bin",
+    "dashboard/src-tauri",
 ]
 
 [workspace.package]

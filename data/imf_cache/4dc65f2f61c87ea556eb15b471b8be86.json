@@ -1,0 +1,406 @@
+[
+  {
+    "id": "01R",
+    "name": "Exchange Rates and International Reserves (01R) for Collection"
+  },
+  {
+    "id": "1DI",
+    "name": "Coordinated Direct Investment Survey (CDIS) for Collection"
+  },
+  {
+    "id": "1PI",
+    "name": "Coordinated Portfolio Investment Survey (CPIS) for Collection"
+  },
+  {
+    "id": "1SR",
+    "name": "M&B: Central Bank (1SR) for Collection"
+  },
+  {
+    "id": "2SR",
+    "name": "M&B: Other Depository Corporations (2SR) for Collection"
+  },
+  {
+    "id": "4SR",
+    "name": "M&B: Other Financial Corporations (4SR) for Collection"
+  },
+  {
+    "id": "5SR",
+    "name": "M&B: Monetary Aggregates (5SR) for Collection"
+  },
+  {
+    "id": "60R",
+    "name": "RES: Prices, Production, Labor and Trade (60R) for Collection"
+  },
+  {
+    "id": "6SR",
+    "name": "M&B: Interest Rates and Share Prices (6SR) for Collection"
+  },
+  {
+    "id": "90R",
+    "name": "RES: National Accounts (90R) for Collection"
+  },
+  {
+    "id": "BCG",
+    "name": "Budgetary Central Government Operations"
+  },
+  {
+    "id": "BCGO_ALT_FISCAL",
+    "name": "Budgetary Central Government Operations"
+  },
+  {
+    "id": "BOP5_COLLECTION",
+    "name": "Balance of Payments (BPM5) for Collection"
+  },
+  {
+    "id": "BOP6",
+    "name": "Balance of Payments (BPM6) for Collection"
+  },
+  {
+    "id": "BOP_BPM5",
+    "name": "Balance of Payments -- BPM5"
+  },
+  {
+    "id": "BOP_BPM6",
+    "name": "Balance of Payments -- BPM6"
+  },
+  {
+    "id": "BOP_GBPM6",
+    "name": "Balance of Payments _Global use_BOP_BPM6"
+  },
+  {
+    "id": "BPM6_BOP_Q",
+    "name": "Balance of Payments --BPM6--Global DSD"
+  },
+  {
+    "id": "BPM6_RA_M",
+    "name": "Template on International Reserves and Foreign Currency Liquidity--Global DSD"
+  },
+  {
+    "id": "CBS",
+    "name": "Central Bank Survey"
+  },
+  {
+    "id": "CBS_NSTD",
+    "name": "Central Bank Survey_Non-Standard"
+  },
+  {
+    "id": "CGD",
+    "name": "Central Government debt (CGD)"
+  },
+  {
+    "id": "CGD_ALT_FISCAL",
+    "name": "Central Government debt (CGD) FISCAL"
+  },
+  {
+    "id": "CGD_GNA",
+    "name": "Central Government Debt (CGD) - Global Use NA_SEC DSD V1.5"
+  },
+  {
+    "id": "CGD_NSTD",
+    "name": "Central Government Debt_Non-Standard"
+  },
+  {
+    "id": "CGO",
+    "name": "Central Government Operations (CGO)"
+  },
+  {
+    "id": "CGO_ALT_FISCAL",
+    "name": "Central Government operations (CGO) FISCAL"
+  },
+  {
+    "id": "CGO_GNA",
+    "name": "Central Government operations (CGO) - Global Use NA_SEC DSD V1.4"
+  },
+  {
+    "id": "CGO_NSTD",
+    "name": "Central government operations_Non-Standard"
+  },
+  {
+    "id": "COF",
+    "name": "COFER: Currency Composition of Foreign Exchange Reserves"
+  },
+  {
+    "id": "CPI",
+    "name": "Consumer Price Index"
+  },
+  {
+    "id": "CPIH",
+    "name": "Consumer Price Index Harmonized (CPIH) for collection"
+  },
+  {
+    "id": "DCS",
+    "name": "Depository Corporations Survey"
+  },
+  {
+    "id": "DCS_NSTD",
+    "name": "Depository Corporations Survey_Non-Standard"
+  },
+  {
+    "id": "DOTS",
+    "name": "Direction of Trade Statistics (DOTS) for Collection"
+  },
+  {
+    "id": "DSE",
+    "name": "Debt Securities"
+  },
+  {
+    "id": "DSE_GBPM6",
+    "name": "Debt Securities - Global Use BPM6 DSD"
+  },
+  {
+    "id": "DSE_GNA",
+    "name": "Debt Securities - Global Use NA_SEC DSD V1.12"
+  },
+  {
+    "id": "ECC",
+    "name": "Climate Change"
+  },
+  {
+    "id": "EMP",
+    "name": "Employment"
+  },
+  {
+    "id": "EXD",
+    "name": "External debt"
+  },
+  {
+    "id": "EXD_BPM6",
+    "name": "External Debt (EXD_BPM6)"
+  },
+  {
+    "id": "EXD_GBPM6",
+    "name": "External Debt (EXD)- Global Use BOP_BPM6"
+  },
+  {
+    "id": "EXR",
+    "name": "Exchange rates"
+  },
+  {
+    "id": "FAS_COLLECTION",
+    "name": "Financial Access Survey (FAS) for Collection"
+  },
+  {
+    "id": "FLI",
+    "name": "Forward looking Indicators"
+  },
+  {
+    "id": "FS1",
+    "name": "FSI: Institution of Deposit Takers and OFCs (FS1) for Collection"
+  },
+  {
+    "id": "FS2",
+    "name": "FSI: Sectoral Financial Statements (FS2) for Collection"
+  },
+  {
+    "id": "FSD",
+    "name": "FSI: Data Report Form (FSD) for Collection"
+  },
+  {
+    "id": "FSD_NSTD",
+    "name": "FSI: Data Report Form_Non-Standard"
+  },
+  {
+    "id": "FSI",
+    "name": "Financial Soundness Indicators"
+  },
+  {
+    "id": "FXI",
+    "name": "Foreign Exchange Intervention"
+  },
+  {
+    "id": "GFB",
+    "name": "GFS: Budgetary Central Govt: Operational Statement, Cash Statement, Balance Sheet (GFB) for Collection"
+  },
+  {
+    "id": "GFC",
+    "name": "GFS: Consolidated Central Govt: Operational Statement, Cash Statement, Balance Sheet (GFC) for Collection"
+  },
+  {
+    "id": "GFG",
+    "name": "GFS: Consolidated General Govt: Operational Statement, Cash Statement, Balance Sheet (GFG) for Collection"
+  },
+  {
+    "id": "GGD",
+    "name": "General Government gross debt (GGD)"
+  },
+  {
+    "id": "GGD_ALT_FISCAL",
+    "name": "General Government debt (GGD) FISCAL"
+  },
+  {
+    "id": "GGD_GNA",
+    "name": "General Government debt - Global Use NA_SEC DSD V1.7"
+  },
+  {
+    "id": "GGO",
+    "name": "General Government Operations (GGO)"
+  },
+  {
+    "id": "GGO_ALT_FISCAL",
+    "name": "General Government operations (GGO) FISCAL"
+  },
+  {
+    "id": "GGO_GNA",
+    "name": "General Government operations (GGO) - Global Use NA_SEC DSD V1.5"
+  },
+  {
+    "id": "GYQ",
+    "name": "GFS: Yearkbook Questionnaire (GYQ) for Collection"
+  },
+  {
+    "id": "IIP5_COLLECTION",
+    "name": "International Investment Position (BPM5) for Collection"
+  },
+  {
+    "id": "IIP6",
+    "name": "International Investment Position (BPM6) for Collection"
+  },
+  {
+    "id": "IIP_BPM5",
+    "name": "International Investment Position -- BPM5"
+  },
+  {
+    "id": "IIP_BPM6",
+    "name": "International Investment Position -- BPM6"
+  },
+  {
+    "id": "IIP_GBPM6",
+    "name": "International Investment Position (IIP) - Global Use BOP_BPM6"
+  },
+  {
+    "id": "ILV1",
+    "name": "Official reserve assets"
+  },
+  {
+    "id": "ILV1_GBPM6",
+    "name": "Official Reserve Assets (ILV1)-Global Use BOP_BPM6"
+  },
+  {
+    "id": "ILV2",
+    "name": "Template on International Reserves and Foreign Currency Liquidity"
+  },
+  {
+    "id": "ILV2_GBPM6",
+    "name": "Reserves Template (ILV2)-Global Use BPM6"
+  },
+  {
+    "id": "IND",
+    "name": "Index of Industrial Production"
+  },
+  {
+    "id": "IND_NSTD",
+    "name": "Index of Industrial Production_Non-Standard"
+  },
+  {
+    "id": "INF",
+    "name": "Instrument Composition of Transactions in Foreign Exchange Reserves (INFER) for Collection"
+  },
+  {
+    "id": "INR",
+    "name": "Interest rates"
+  },
+  {
+    "id": "INR_NSTD",
+    "name": "Interest rates_Non-Standard"
+  },
+  {
+    "id": "LMI",
+    "name": "Labor Market Indicators"
+  },
+  {
+    "id": "LMI_NSTD",
+    "name": "Labor Market Indicators_Non-Standard"
+  },
+  {
+    "id": "MET",
+    "name": "Merchandise trade"
+  },
+  {
+    "id": "MET_NSTD",
+    "name": "Merchandise Trade_Non-Standard"
+  },
+  {
+    "id": "MSG",
+    "name": "Monetary and Financial Statistics Aggregates"
+  },
+  {
+    "id": "NAG",
+    "name": "National Accounts"
+  },
+  {
+    "id": "NAG_08",
+    "name": "National Accounts -- 08'"
+  },
+  {
+    "id": "NAG_93",
+    "name": "National Accounts -- 93'"
+  },
+  {
+    "id": "NAG_GNA",
+    "name": "National Accounts 2008 (NAG08) - Global Use NA_MAIN v1.11"
+  },
+  {
+    "id": "NAG_NSTD",
+    "name": "National Accounts - GDP_Non-Standard"
+  },
+  {
+    "id": "NASEC_T0720_Q",
+    "name": "Sectoral Balance Sheets"
+  },
+  {
+    "id": "OFS",
+    "name": "Other Financial Corporations (OFC) survey"
+  },
+  {
+    "id": "OFS_GNA",
+    "name": "Other Financial Corporations (OFC) - Global Use NA_SEC v1.5"
+  },
+  {
+    "id": "POP",
+    "name": "Population"
+  },
+  {
+    "id": "PPI",
+    "name": "Producer Price Index"
+  },
+  {
+    "id": "RTD",
+    "name": "Reserves Template for Collection"
+  },
+  {
+    "id": "SBS",
+    "name": "Accumulation Accounts (Sectoral Balance Sheets)"
+  },
+  {
+    "id": "SBS_GNA",
+    "name": "Sectoral Balance Sheets (SBS) - Global Use NA_SEC v1.12"
+  },
+  {
+    "id": "SOC",
+    "name": "Socio-Demographic"
+  },
+  {
+    "id": "SPI",
+    "name": "Stock Market: Share Price Index"
+  },
+  {
+    "id": "UEM",
+    "name": "Unemployment"
+  },
+  {
+    "id": "WOE",
+    "name": "Wages and Earnings"
+  },
+  {
+    "id": "YGG",
+    "name": "Gender"
+  },
+  {
+    "id": "ZZZNL_TEST",
+    "name": "ZZZ_TEST_ECOFIN"
+  },
+  {
+    "id": "ZZZ_TEST_ECOFIN",
+    "name": "Test Dataflow EcoFin DSD"
+  }
+]

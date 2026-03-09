@@ -1,0 +1,216 @@
+/* ── Design tokens ──────────────────────────────────────────────────────────── */
+:root {
+  --bg:          #0d0d10;
+  --card:        #161620;
+  --border:      #252535;
+  --accent:      #00e676;
+  --accent-dim:  #00b85e;
+  --danger:      #ff5252;
+  --warning:     #ffb300;
+  --text:        #e0e0e8;
+  --text-muted:  #7070a0;
+  --font-mono:   "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+  --font-sans:   "Inter", system-ui, sans-serif;
+  --radius:      6px;
+  --shadow:      0 2px 12px rgba(0, 0, 0, 0.6);
+}
+
+/* ── Reset ───────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #root { height: 100%; width: 100%; overflow: hidden; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Layout shell ────────────────────────────────────────────────────────── */
+.dashboard {
+  display: grid;
+  grid-template-rows: 48px 1fr 1fr;
+  grid-template-columns: 1fr;
+  height: 100vh;
+  gap: 8px;
+  padding: 8px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.header h1 {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+}
+
+.progress-bar-wrap {
+  flex: 1;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.header-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.btn {
+  padding: 4px 14px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn:hover { background: rgba(0,230,118,0.08); }
+.btn.danger { border-color: var(--danger); color: var(--danger); }
+.btn.danger:hover { background: rgba(255,82,82,0.08); }
+
+/* ── Row grids ───────────────────────────────────────────────────────────── */
+.row-charts {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 8px;
+}
+
+.row-data {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+
+/* ── Card ────────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.card-body {
+  flex: 1;
+  overflow: hidden;
+  padding: 8px;
+}
+
+/* ── Recharts overrides ──────────────────────────────────────────────────── */
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  background: var(--card) !important;
+  border: 1px solid var(--border) !important;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.recharts-cartesian-axis-tick-value {
+  fill: var(--text-muted) !important;
+  font-family: var(--font-mono) !important;
+  font-size: 10px !important;
+}
+
+/* ── Positions table ─────────────────────────────────────────────────────── */
+.pos-table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 11px; }
+.pos-table th { color: var(--text-muted); font-weight: 400; text-align: left; padding: 4px 6px; border-bottom: 1px solid var(--border); }
+.pos-table td { padding: 4px 6px; }
+.pos-table tr:hover td { background: rgba(255,255,255,0.02); }
+.side-buy  { color: var(--accent); }
+.side-sell { color: var(--danger); }
+
+/* ── Risk metric cards ───────────────────────────────────────────────────── */
+.metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; height: 100%; }
+.metric-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px 12px;
+}
+.metric-label { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+.metric-value { font-family: var(--font-mono); font-size: 18px; font-weight: 600; }
+.metric-value.positive { color: var(--accent); }
+.metric-value.negative { color: var(--danger); }
+.metric-value.neutral  { color: var(--text); }
+.metric-value.warn     { color: var(--warning); }
+
+/* ── Order log ───────────────────────────────────────────────────────────── */
+.order-log { height: 100%; overflow-y: auto; font-family: var(--font-mono); font-size: 10px; }
+.order-log::-webkit-scrollbar { width: 4px; }
+.order-log::-webkit-scrollbar-track { background: transparent; }
+.order-log::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.log-entry { display: flex; gap: 8px; align-items: baseline; padding: 3px 4px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+.log-ts { color: var(--text-muted); flex-shrink: 0; }
+.log-badge {
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  flex-shrink: 0;
+}
+.badge-fill { background: rgba(0,230,118,0.15); color: var(--accent); }
+.badge-reject { background: rgba(255,82,82,0.15); color: var(--danger); }
+.log-body { color: var(--text); flex: 1; }
+
+/* ── Connection status ───────────────────────────────────────────────────── */
+.conn-wrap { display: flex; flex-direction: column; gap: 10px; padding: 4px; }
+.mode-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+.mode-sim  { background: rgba(0,230,118,0.1);  color: var(--accent); border: 1px solid var(--accent-dim); }
+.mode-paper{ background: rgba(255,179,0,0.1);  color: var(--warning); border: 1px solid var(--warning); }
+.mode-live { background: rgba(255,82,82,0.1);  color: var(--danger);  border: 1px solid var(--danger); }
+.conn-row { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+.conn-val { color: var(--text); }
+.symbols-list { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.symbol-chip {
+  padding: 2px 8px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}

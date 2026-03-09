@@ -149,6 +149,15 @@ impl Mt5Bridge {
         info!("disconnected from MT5 EA connector");
     }
 
+    /// Poll for new events from the bridge (ticks, fills, etc.).
+    ///
+    /// This is the primary event loop method for live trading. It drains
+    /// any buffered inbound messages and converts them to events.
+    pub fn poll_events(&mut self) -> Vec<Event> {
+        self.drain_inbound();
+        std::mem::take(&mut self.pending_events)
+    }
+
     /// Returns `true` if the TCP connection is active.
     pub fn is_connected(&self) -> bool {
         self.stream.is_some()

@@ -1,12 +1,13 @@
 use std::collections::HashMap;
 use std::time::Instant;
 
+use rust_decimal::prelude::ToPrimitive;
 use rust_decimal::Decimal;
 use rust_decimal_macros::dec;
 use tracing::{debug, info};
 
 use quantfund_core::{
-    Event, FillEvent, InstrumentId, Order, OrderId, OrderStatus, Price, StrategyId, Volume,
+    Event, FillEvent, InstrumentId, Order, OrderId, OrderStatus, Price, StrategyId, TickEvent, Volume,
 };
 use quantfund_data::TickReplay;
 use quantfund_execution::OrderManagementSystem;
@@ -17,6 +18,7 @@ use quantfund_strategy::{MarketSnapshot, Strategy};
 use crate::config::BacktestConfig;
 use crate::metrics::calculate_metrics;
 use crate::portfolio::Portfolio;
+use crate::progress::{BacktestProgress, FillSummary};
 use crate::result::BacktestResult;
 
 /// The deterministic backtest runner.
@@ -33,6 +35,8 @@ pub struct BacktestRunner {
     execution: Box<dyn ExecutionBridge>,
     oms: OrderManagementSystem,
     portfolio: Portfolio,
+    /// Optional progress callback: (interval_ticks, callback_fn).
+    progress_callback: Option<(u64, Box<dyn FnMut(BacktestProgress) + Send>)>,
 }
 
 impl BacktestRunner {
@@ -53,6 +57,7 @@ impl BacktestRunner {
             execution,
             oms,
             portfolio,
+            progress_callback: None,
         }
     }
 
@@ -73,7 +78,30 @@ impl BacktestRunner {
             execution,
             oms,
             portfolio,
+            progress_callback: None,
         }
+    }
+
+    /// Attach a progress callback invoked every `interval_ticks` ticks.
+    ///
+    /// The callback receives a [`BacktestProgress`] snapshot and can be used
+    /// to feed a live dashboard, log intermediate results, or drive tests.
+    ///
+    /// # Example
+    /// ```rust,no_run
+    /// # use quantfund_backtest::{BacktestRunner, BacktestConfig, BacktestProgress};
+    /// # fn make_runner() -> BacktestRunner { unimplemented!() }
+    /// let runner = make_runner()
+    ///     .on_progress(1_000, |p| {
+    ///         println!("tick={} equity={:.2}", p.tick_count, p.equity);
+    ///     });
+    /// ```
+    pub fn on_progress<F>(mut self, interval_ticks: u64, callback: F) -> Self
+    where
+        F: FnMut(BacktestProgress) + Send + 'static,
+    {
+        self.progress_callback = Some((interval_ticks, Box::new(callback)));
+        self
     }
 
     /// Run the backtest over the full tick replay and return a complete result.
@@ -93,6 +121,9 @@ impl BacktestRunner {
         let mut order_metadata: HashMap<OrderId, (StrategyId, Option<Price>, Option<Price>)> =
             HashMap::new();
 
+        // Fills accumulated since the last progress callback.
+        let mut pending_fills: Vec<FillSummary> = Vec::new();
+
         info!(
             instruments = ?self.config.instruments,
             start = %self.config.start_time,
@@ -103,7 +134,7 @@ impl BacktestRunner {
 
         while let Some(tick) = replay.next_tick() {
             // Clone the tick so we own it for the remainder of this iteration.
-            let tick = tick.clone();
+            let tick: TickEvent = tick.clone();
 
             // ── Step A: Process tick through execution bridge -> collect fills ─
             let events = self.execution.process_tick(&tick);
@@ -123,6 +154,17 @@ impl BacktestRunner {
 
                         // Feed execution data to risk engine for anomaly tracking.
                         self.risk_engine.record_execution(0, fill.slippage);
+
+                        // Accumulate fill for next progress snapshot.
+                        pending_fills.push(FillSummary {
+                            timestamp_ms: fill.timestamp.as_millis(),
+                            instrument: fill.instrument_id.to_string(),
+                            side: fill.side.to_string(),
+                            volume: (*fill.volume).to_f64().unwrap_or(0.0),
+                            fill_price: (*fill.fill_price).to_f64().unwrap_or(0.0),
+                            slippage: fill.slippage.to_f64().unwrap_or(0.0),
+                            commission: fill.commission.to_f64().unwrap_or(0.0),
+                        });
                     }
                     Event::PartialFill(pf) => {
                         self.oms.update_status(
@@ -250,6 +292,37 @@ impl BacktestRunner {
 
             tick_counter += 1;
 
+            // ── Step H: Progress callback ─────────────────────────────────────
+            if let Some((interval, ref mut cb)) = self.progress_callback {
+                if tick_counter % interval == 0 || tick_counter == total_ticks_expected {
+                    let equity_curve_raw = self.portfolio.equity_curve();
+                    let snapshot = BacktestProgress {
+                        tick_count: tick_counter,
+                        total_ticks: total_ticks_expected,
+                        progress_pct: if total_ticks_expected > 0 {
+                            (tick_counter as f64 / total_ticks_expected as f64) * 100.0
+                        } else {
+                            0.0
+                        },
+                        equity: self.portfolio.equity(),
+                        balance: self.portfolio.balance(),
+                        daily_pnl: self.portfolio.daily_pnl(),
+                        current_drawdown: self.portfolio.drawdown(),
+                        max_drawdown: self.portfolio.max_drawdown(),
+                        open_positions: self
+                            .portfolio
+                            .open_positions()
+                            .values()
+                            .cloned()
+                            .collect(),
+                        total_closed_trades: self.portfolio.total_trades(),
+                        equity_curve: Self::downsample_curve(equity_curve_raw, 2_000),
+                        recent_fills: std::mem::take(&mut pending_fills),
+                    };
+                    cb(snapshot);
+                }
+            }
+
             // Log progress every 100_000 ticks.
             if tick_counter.is_multiple_of(100_000) {
                 let pct = if total_ticks_expected > 0 {
@@ -303,6 +376,22 @@ impl BacktestRunner {
             elapsed_time_ms: elapsed_ms,
             ticks_per_second,
         }
+    }
+
+    /// Downsample an equity curve to at most `max_points` evenly-spaced entries.
+    /// If the curve is shorter than `max_points`, it is returned as-is.
+    fn downsample_curve(
+        curve: &[(quantfund_core::Timestamp, rust_decimal::Decimal)],
+        max_points: usize,
+    ) -> Vec<(quantfund_core::Timestamp, rust_decimal::Decimal)> {
+        let n = curve.len();
+        if n <= max_points {
+            return curve.to_vec();
+        }
+        let step = n as f64 / max_points as f64;
+        (0..max_points)
+            .map(|i| curve[(i as f64 * step) as usize])
+            .collect()
     }
 
     /// Handle a fill event: either close an existing position (opposite side)

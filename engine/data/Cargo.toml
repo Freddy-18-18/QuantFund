@@ -9,9 +9,15 @@ quantfund-events = { workspace = true }
 arrow = { workspace = true }
 parquet = { workspace = true }
 chrono = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
 rust_decimal = { workspace = true }
 rust_decimal_macros = { workspace = true }
 thiserror = { workspace = true }
 tracing = { workspace = true }
+tokio = { workspace = true }
+reqwest = { version = "0.12", features = ["json"] }
+async-trait = "0.1"
+tokio-postgres = { version = "0.7", features = ["with-chrono-0_4"] }
 
 [dev-dependencies]
